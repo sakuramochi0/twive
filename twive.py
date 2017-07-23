@@ -46,7 +46,7 @@ def load_user_ids(exists=True, protected=False):
 
 
 def update_users():
-    user_ids = load_user_ids(protected=True)
+    user_ids = load_user_ids(protected=True) + load_user_ids(protected=False)
     for user_id in user_ids:
         try:
             user = api.get_user(user_id=user_id)
@@ -68,6 +68,14 @@ def save_user(user_id):
                             {'$set': {'data': tweet._json}},
                             upsert=True)
         logger.info('saving tweet: {}'.format(tweet.id))
+        logger.info('{}(@{}) {}\n{}\nhttps://twitter.com/{}/status/{}'.format(
+            tweet.user.name,
+            tweet.user.screen_name,
+            tweet.created_at,
+            tweet.text,
+            tweet.user.screen_name,
+            tweet.id,
+        ))
 
 
 def twisave():
